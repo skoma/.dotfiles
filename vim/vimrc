@@ -1,0 +1,187 @@
+" init pathogen
+call pathogen#runtime_append_all_bundles()
+call pathogen#helptags()
+
+set nocompatible " use vim defaults
+set scrolloff=3 " keep 3 lines when scrolling
+set ai " set auto-indenting on for programming
+set shiftwidth=4 " go for an indent of 4
+set tabstop=4
+set softtabstop=4
+
+set showcmd " display incomplete commands
+set number " show line numbers
+set ruler " show the current row and column
+set wildmenu " Use the cool tab complete menu
+set wildignore=*.o,*~ " ignore some
+
+set hidden " be not so strikt when switching from a unsaved buffer
+set tabpagemax=100 " increase tab limit
+set makeprg=vim-cmake-makeprg " use script for :make to work with cmake, too
+" Use ack instead of grep when available
+if executable("ack")
+	set grepprg=ack\ -H\ --nogroup\ --nocolor\ --ignore-dir=tmp\ --ignore-dir=build
+endif
+" set switchbuf=usetab,newtab,split " quickfix should jump to tab
+set switchbuf=split
+
+set nobackup " do not keep a backup file
+set nowritebackup
+set autowrite
+set directory=~/.vimswap
+
+set hlsearch " highlight searches
+set incsearch " do incremental searching
+set showmatch " jump to matches when entering regexp
+set ignorecase " ignore case when searching
+set smartcase " no ignorecase if Uppercase char present
+set showfulltag " show full tags when doing search completion
+
+set visualbell t_vb= " turn off error beep/flash
+set novisualbell " turn off visual bell
+
+" set backspace=indent,eol,start " make that backspace key work the way it should
+
+syntax on " turn syntax highlighting on by default
+filetype on " detect type of file
+filetype indent on " load indent file for specific file type
+filetype plugin on " load plugins for specific file type
+
+
+set listchars=tab:▸\ ,eol:¬ " Use custom symbols for tabstops and EOLs
+set showbreak=…
+
+" Nice statusbar
+set laststatus=2
+set statusline=
+set statusline+=%-3.3n\                      " buffer number
+set statusline+=%f\                          " file name
+set statusline+=%h%m%r%w                     " flags
+set statusline+=\[%{strlen(&ft)?&ft:'none'}\] " filetype
+set statusline+=\ \[%{&encoding},                " encoding
+set statusline+=%{&fileformat}]              " file format
+set statusline+=%=                           " right align
+set statusline+=0x%-8B\                      " current char
+set statusline+=%-14.(%l,%c%V%)\ %<%P        " offset
+
+" set guitablabel=%{MyTabLabel()} " use custom tab labeling
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" syntax highlighting
+
+exec "colorscheme" "myeve"
+
+" some customizations
+" highlight Comment term=bold ctermfg=darkgray guifg=darkgray
+" highlight NonText guifg=darkgray ctermfg=darkgray
+" highlight SpecialKey guifg=darkgray ctermfg=darkgray
+" highlight Todo guibg=red guifg=black
+" highlight Search term=bold ctermfg=white ctermbg=darkblue guibg=darkblue guifg=white
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" autcmds
+
+if has('autocmd')
+	" editing vimrc getting slow with this
+	"     autocmd bufwritepost .vimrc source $MYVIMRC " Source the vimrc file after saving it
+
+	autocmd FileType tex,mail,asciidoc
+				\ setlocal spell spelllang=en|
+"                 \ setlocal wrap|
+				\ setlocal tw=78|
+				\ setlocal linebreak|
+				\ setlocal formatoptions=ta|
+				\ setlocal formatprg=par-format\ -w78rq
+
+	autocmd FileType c,cpp
+				\ nmap <F7> :make clean<CR>|
+				\ nmap <F8> :make<CR>|
+				\ nmap <F9> :make test<CR>|
+				\ map <C-F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR><CR>
+
+	autocmd FileType python
+				\ set expandtab |
+				\ nmap <F9> :!python %<CR>
+
+	autocmd FileType sh
+				\ nmap <F9> :!%<CR>
+
+	" close omnocppcomplete preview
+	"     autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+	"     autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+endif
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" mappings
+
+let mapleader=','
+
+inoremap <S-CR> <Esc>
+
+" map <F3> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+map <silent> <F3> <C-W>gf
+
+" tab movement
+map <C-Tab> :tabnext<cr>
+map <C-S-Tab> :tabprevious<cr>
+
+" Shortcut to rapidly toggle `set list`
+nmap <F12> :set list!<CR>
+
+" window navigation
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
+
+" edit jumps to directory of the current file
+map <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
+map <leader>es :sp <C-R>=expand("%:p:h") . "/" <CR>
+map <leader>ev :vsp <C-R>=expand("%:p:h") . "/" <CR>
+map <leader>et :tabe <C-R>=expand("%:p:h") . "/" <CR>
+
+" toggle :copen and :cclose
+map <C-F1> :FixQWin<CR>
+" cwindow navigation
+map <C-F2> :cp<CR>
+map <C-F3> :cn<CR>
+
+" open url under cursor
+map <Leader>w :call OpenURL()<CR><CR>
+
+
+" unimpaired mappings
+nmap <C-Up> [e
+nmap <C-Down> ]e
+vmap <C-Up> [egv
+vmap <C-Down> ]egv
+
+" EnhancedCommentify
+imap <silent> <F1> <Leader>c
+map <silent> <F1> <Leader>c
+
+" taglist
+nnoremap <silent> <F2> :Tlist<CR>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" plugins setup
+
+" EnhancedCommentify settings
+let g:EnhCommentifyPretty = 'Yes'
+let g:EnhCommentifyUseBlockIndent = 'Yes'
+let g:EnhCommentifyMultiPartBlocks = 'yes'
+let g:EnhCommentifyAlignRight = 'yes'
+" let g:EnhCommentifyUserBindings = 'yes'
+
+" taglist settings
+let Tlist_Show_One_File = 1
+let Tlist_Use_SingleClick = 1
+" let Tlist_Display_Prototype = 1
+" let Tlist_Exit_OnlyWindow = 1
+
+" disable preview menu in omnicomplete
+set completeopt=menu

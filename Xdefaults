@@ -1,0 +1,43 @@
+*antialias: true
+
+URxvt*geometry:		80x30
+URxvt*background:	black
+URxvt*foreground:	white
+URxvt*tintColor:	white
+URxvt*shading:		40
+URxvt*scrollBar:	false
+URxvt*fading:		25
+URxvt*saveLines:	3767 
+URxvt*borderLess:	false
+URxvt*cursorColor:	Grey
+URxvt*loginShell:	true
+urxvt*inheritPixmap:	true
+URxvt*font: 		xft:terminus
+! URxvt*font: 		7x14
+! URxvt*font: 		-*-terminal-medium-*-*-*-14-*-*-*-*-*-*-*
+
+
+XTerm*jumpScroll:               true
+XTerm*underLine:                true
+XTerm*scrollKey:            	true 
+XTerm*internalBorder:           3
+XTerm*scrollBar:                true
+XTerm*rightScrollBar:           true
+XTerm*loginShell:               true
+XTerm*geometry:                 85x23
+XTerm*saveLines:                5000
+XTerm*charClass: 33:48,35:48,37:48,43:48,45-47:48,64:48,95:48,126:48,35:48,58:48
+#Xterm*foreground:white
+#xterm*background:black
+#xterm*title:console
+#XTerm*multiScroll:              true
+#XTerm*boldColors:               false
+#XTerm*boldMode:                 false
+#XTerm*colorBD:                  MediumBlue
+#XTerm*colorBDMode:              true
+#XTerm*colorUL:                  #1FA638
+#XTerm*colorULMode:              true
+#XTerm*scrollTtyOutput:      false
+#XTerm*highlightColor:           LightSkyBlue
+#XTerm*cursorColor:              MediumBlue
+#XTerm*pointerColor:             MediumBlue
