@@ -107,6 +107,8 @@ override_utf8_locale yes
 # Add spaces to keep things from moving about?  This only affects certain objects.
 use_spacer none
 
+lua_load .dotfiles/conky_scripts.lua
+
 #   mldonkey_hostname     Hostname for mldonkey stuff, defaults to localhost
 #   mldonkey_port         Mldonkey port, 4001 default
 #   mldonkey_login        Mldonkey login, default none
@@ -128,6 +130,5 @@ use_spacer none
 
 #${color gray50}ram$color $memperc%${color red1} | ${color gray50}swap$color $swapperc%${color red1} | ${color gray50}proc/run$color $processes${color gray50}/$color$running_processes${color red1} | ${color gray50}down/up $color${downspeed eth1}${color gray50}/ $color${upspeed eth1}${color red1} | ${color gray50}freq/temp $color$freq_g ${color gray50}/ $color${hwmon temp 1}°C${color red1} | ${color gray50}cpu$color $cpu%
 
-#${if_existing /tmp/l.cky wire}wire$else${if_existing /tmp/l.cky wlan}${wireless_link_qual_perc eth1}$endif$endif
 TEXT
-${voffset -6}${if_existing /tmp/m.cky}${color #FF0000}$else${color #CCFFFF}$endif${font OpenLogos:size=24}Q${voffset -10}${font}      ${color #99CCCC}${font StyleBats:size=15}c$font${voffset -2}$color ${memperc}% ${voffset -3}${color #99CCCC}${font StyleBats:size=15}e$font${voffset -2}$color ${swapperc}%    ${voffset -5}${color #99CCCC}${font PizzaDude Bullets:size=15}j$font$color ${processes} ${voffset -5}${color #99CCCC}${font PizzaDude Bullets:size=15}i$font$color ${running_processes}${if_existing /tmp/l.cky wire}    ${voffset -5}${color #99CCCC}${font PizzaDude Bullets:size=15}T$font$color ${downspeed eth0} ${voffset -5}${color #99CCCC}${font PizzaDude Bullets:size=15}N$font$color ${upspeed eth0}$else${if_existing /tmp/l.cky wlan}    ${voffset -5}${color #99CCCC}${font PizzaDude Bullets:size=15}S$font$color ${downspeed eth1} ${voffset -5}${color #99CCCC}${font PizzaDude Bullets:size=15}M$font$color ${upspeed eth1} ${voffset -5}${color #99CCCC}${font PizzaDude Bullets:size=15}:$font$color ${wireless_link_qual_perc eth1}%$endif$endif    ${voffset -4}${color #99CCCC}${font StyleBats:size=15}l${font}${voffset -1}$color ${freq_g} ${voffset -3}${color #99CCCC}${font weather:size=16}z$font${voffset -3}$color ${hwmon temp 1}°C ${voffset -3}${color #99CCCC}${font StyleBats:size=15}a${font}${voffset -2}$color ${cpu}%
+${voffset -6}${lua_parse getmail #FF0000 #CCFFFF}${voffset -10}${font}      ${color #99CCCC}${font StyleBats:size=15}c$font${voffset -2}$color ${memperc}% ${voffset -3}${color #99CCCC}${font StyleBats:size=15}e$font${voffset -2}$color ${swapperc}%    ${voffset -5}${color #99CCCC}${font PizzaDude Bullets:size=15}${lua_parse proc_run}$font$color ${processes}${lua_parse printnet #99CCCC}    ${voffset -4}${color #99CCCC}${font StyleBats:size=15}l${font}${voffset -1}$color ${freq_g} ${voffset -3}${color #99CCCC}${font weather:size=16}z$font${voffset -3}$color ${hwmon temp 1}°C ${voffset -3}${color #99CCCC}${font StyleBats:size=15}a${font}${voffset -2}$color ${cpu}%
