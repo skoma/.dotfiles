@@ -1,3 +1,5 @@
+local netfile = "/tmp/.conky_net"
+local mailfile = "/tmp/.conky_mail"
 
 function conky_proc_run()
 	val = tonumber(conky_parse(string.format('${running_processes}')))
@@ -22,7 +24,7 @@ end
 
 function conky_getmail(yescol, nocol)
 	col = nocol
-	if exists("/tmp/m.cky") then
+	if exists(mailfile) then
 		col = yescol
 	end
 	return string.format("${color %s}${font OpenLogos:size=24}Q", col)
@@ -38,7 +40,7 @@ end
 
 function conky_printnet(color)
 	retval = ""
-	file = io.open("/tmp/l.cky")
+	file = io.open(netfile)
 	if file then
 		line = file.read(file)
 		io.close(file)
