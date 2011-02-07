@@ -3,7 +3,7 @@
 
 
 # activate bash-completion
-[ -f /etc/profile.d/bash-completion ] && source /etc/profile.d/bash-completion
+[ -f /etc/profile.d/bash-completion.sh ] && source /etc/profile.d/bash-completion.sh
 
 case $TERM in
 	xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
