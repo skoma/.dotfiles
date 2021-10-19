@@ -1,8 +1,0 @@
-# startup script
-
-# deamons
-#exec irexec &
-
-# wm start
-#DISPLAY=":0" exec startfluxbox
-exec startfluxbox
