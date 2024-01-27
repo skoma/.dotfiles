@@ -9,11 +9,11 @@ set showcmd " display incomplete commands
 "set number " show line numbers
 set ruler " show the current row and column
 set wildmenu " Use the cool tab complete menu
-set wildignore=*.o,*~ " ignore some
-
-set wildchar=<Tab> wildmenu wildmode=full
+set wildchar=<Tab>
+set wildmode=longest:full,full
 "set wildmode=longest,list 
 "set wildmode=longest:full,full
+set wildignore=*.o,*~ " ignore some
 
 set hidden " be not so strikt when switching from a unsaved buffer
 set tabpagemax=100 " increase tab limit
@@ -24,7 +24,12 @@ set tabpagemax=100 " increase tab limit
 set nobackup " do not keep a backup file
 set nowritebackup
 set autowrite
-set directory=%HOME%\_vimswap
+
+if has("win32") || has("win16")
+    set directory=%HOME%\.vimswap
+else
+    set directory=$HOME/.vimswap
+endif
 
 set hlsearch " highlight searches
 set incsearch " do incremental searching
@@ -62,11 +67,25 @@ scriptencoding utf-8 " nedds to be fater encoding=
 set listchars=tab:→\ ,eol:¬
 set showbreak=…\ 
 
+set fileformat=unix
+set fileformats=unix,dos
+
+"fix cygwin cursor
+let &t_ti.="\e[1 q"
+let &t_SI.="\e[5 q"
+let &t_EI.="\e[1 q"
+let &t_te.="\e[0 q"
+
 if has("gui_running")
-    set columns=120
-    set lines=45
+"    set columns=120
+"    set lines=45
     set guioptions=Ac
-    set guifont=Liberation_Mono:h10
+if has("win32") || has("win16")
+    set guifont=Liberation_Mono:h9
+else
+    set guifont=Liberation\ Mono\ 10
+endif
+    "set guifont=Liberation_Mono:h9
     "set guifont=Source_Code_Pro_Medium:h10
 endif
 
@@ -106,7 +125,7 @@ set statusline+=%2*%{&modified?\"*\":\"\ \"}\
 set statusline+=%{&readonly?\"ro\":\"\ \ \"}%* 
 "set statusline+=                           "default coloring
 set statusline+=%=                           " right align
-set statusline+=%3*%{strlen(&ft)?&ft:'none'} " filetype
+set statusline+=%{strlen(&ft)?&ft:'none'} " filetype
 set statusline+=\ %{&encoding}                " encoding
 set statusline+=\ %{&fileformat}              " file format
 set statusline+=\ \ \ \                            "default coloring
@@ -123,7 +142,7 @@ exec "colorscheme" "msk"
 "inoremap <S-CR> <Esc>
 
 " movement
-map <C-Tab>   :bp<CR>
+map <C-Tab>   :bn<CR>
 map <C-S-Tab> :bp<CR>
 map <A-n>     :cn<CR>
 map <A-N>     :cp<CR>
@@ -134,9 +153,24 @@ noremap <M-Left>  <C-w>h
 noremap <M-Up>    <C-w>k
 noremap <M-Down>  <C-w>j
 
+inoremap <M-Right> <C-o><C-w>l
+inoremap <M-Left>  <C-o><C-w>h
+inoremap <M-Up>    <C-o><C-w>k
+inoremap <M-Down>  <C-o><C-w>j
+
+" Bugffer resize
+map <silent> <A-S-Left>  :vertical res -1<CR>
+map <silent> <A-S-Right> :vertical res +1<CR>
+map <silent> <A-S-Up>    :resize -1<CR>
+map <silent> <A-S-Down>  :resize +1<CR>
+
+
 " paragraph navigation
-map <C-Up> {
+map <C-Up>   {
 map <C-Down> }
+
+inoremap <C-Up>   <C-o>{
+inoremap <C-Down> <C-o>}
 
 " copy and paste
 vmap <C-c> "+yi
@@ -157,7 +191,7 @@ nmap <silent> <F5> :call MyQuickfix()<CR>
 
 map <F8> :make<CR>
 
-nmap <F11> %!python -m json.tool
+nmap <F11> %!python -m json.tool<CR>
 nmap <F12> :set list!<CR>
 
 
@@ -209,14 +243,18 @@ endfunction
 
 function! MySwitch(other)
     let s:ext = tolower(expand("%:e"))
-    let s:base = expand("%:t:r")
+    let s:name = expand("%:t:r")
+    let s:path = expand("%:h")
     if match(s:ext, 'cpp') == 0 || match(s:ext, 'c') == 0
-        let s:flipname = s:base . ".h"
-        let res = findfile(s:flipname, "*;")
+        let s:flipname = s:name . ".h"
+
+        let res = findfile(s:flipname, s:path, "*;")
+        "echo "find" s:flipname "in" s:path "res:" res
         if empty(res)
             let s:flipname = s:base . ".hpp"
             let res = findfile(s:flipname, "*;")
         endif
+
         if !empty(res)
             if a:other == "1"
                 wincmd w
@@ -224,8 +262,10 @@ function! MySwitch(other)
             exec ":e " . res
         endif
     elseif match(s:ext, 'h') == 0 || match(s:ext, 'hpp') == 0
-        let s:flipname = s:base . ".cpp"
-        let res = findfile(s:flipname, "*;")
+        let s:flipname = s:name . ".cpp"
+
+        let res = findfile(s:flipname, s:path, "*;")
+        "echo "find" s:flipname "in" s:path "res:" res
         if empty(res)
             let s:flipname = s:base . ".c"
             let res = findfile(s:flipname, "*;")
@@ -330,3 +370,4 @@ endfunction
 "  endif
 "endfun
 "
+
